@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.pms.floor.dao.IBookStoreDAO;
 import com.pms.floor.entity.Book;
-import com.pms.floor.services.IBookStoreService;
 
 @Service
 public class BookStoreService implements IBookStoreService {

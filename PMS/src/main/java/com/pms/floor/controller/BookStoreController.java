@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.pms.floor.entity.Book;
-import com.pms.floor.entity.Floor;
 import com.pms.floor.services.IBookStoreService;
 
 

@@ -1,7 +1,6 @@
 package com.pms.floor.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,120 +15,103 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.pms.Application;
 import com.pms.floor.entity.Floor;
 import com.pms.floor.services.IFloorService;
 
 @Controller
 public class FloorController {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(FloorController.class);
-	
+
 	@Autowired
 	private IFloorService service;
-	
+
 //	@GetMapping("/admin/getfloors")
 	@GetMapping("/auth/getfloors")
-	public ResponseEntity<List<Floor>> getFloors(){
-		
+	public ResponseEntity<List<Floor>> getFloors() {
+
 		List<Floor> Floors = service.getFloors();
 		return new ResponseEntity<List<Floor>>(Floors, HttpStatus.OK);
-		
+
 	}
-	
+
 //	@GetMapping("/admin/getfloor/{id}")
 	@GetMapping("/auth/getfloor/{id}")
-	public ResponseEntity<Floor> getFloor(@PathVariable("id") Integer id){
+	public ResponseEntity<Floor> getFloor(@PathVariable("id") Integer id) {
 		Floor Floor = service.getFloor(id);
 		return new ResponseEntity<Floor>(Floor, HttpStatus.OK);
 	}
-	
-	
+
 //	@PostMapping("/admin/createfloor")
 	@PostMapping("/auth/createfloor")
 	public ResponseEntity<?> createFloor(@RequestBody Floor floor) {
-	    // Validate input
-	    if (floor == null || floor.getName() == null || floor.getName().trim().isEmpty()) {
-	        return ResponseEntity
-	                .badRequest()
-	                .body("Floor name must not be null or empty");
-	    }
+		// Validate input
+		if (floor == null || floor.getName() == null || floor.getName().trim().isEmpty()) {
+			return ResponseEntity.badRequest().body("Floor name must not be null or empty");
+		}
 
-	    try {
-	        Floor savedFloor = service.createFloor(floor);
-	        return ResponseEntity.ok(savedFloor);
-	    } catch (Exception e) {
-	        // Log the error (optional)
-	        e.printStackTrace();
-	        return ResponseEntity
-	                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                .body("An error occurred while creating the floor");
-	    }
+		try {
+			Floor savedFloor = service.createFloor(floor);
+			return ResponseEntity.ok(savedFloor);
+		} catch (Exception e) {
+			// Log the error (optional)
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("An error occurred while creating the floor");
+		}
 	}
-	
-	
-	
-	
+
 //	@PutMapping("/updatefloor/{id}")
 //	public ResponseEntity<Floor> updateFloor(@PathVariable("id") int id, @RequestBody Floor Floor){
 //		
 //		Floor b = service.updateFloor(id, Floor);
 //		return new ResponseEntity<Floor>(b, HttpStatus.OK);
 //	}
-	
-	
+
 //	@PutMapping("/admin/updatefloor/{id}")
 	@PutMapping("/auth/updatefloor/{id}")
 	public ResponseEntity<?> updateFloor(@PathVariable Integer id, @RequestBody Floor floorDetails) {
-	    // Validate input
-	    if (floorDetails == null || floorDetails.getName() == null || floorDetails.getName().trim().isEmpty()) {
-	        return ResponseEntity
-	                .badRequest()
-	                .body("Floor name must not be null or empty");
-	    }
+		// Validate input
+		if (floorDetails == null || floorDetails.getName() == null || floorDetails.getName().trim().isEmpty()) {
+			return ResponseEntity.badRequest().body("Floor name must not be null or empty");
+		}
 
-	    try {
-	        // Find existing floor
-	       Floor existingFloor = service.getFloorById(id);
-	        if (existingFloor == null) {
-	            return ResponseEntity
-	                    .status(HttpStatus.NOT_FOUND)
-	                    .body("Floor with ID " + id + " not found");
-	        }
+		try {
+			// Find existing floor
+			Floor existingFloor = service.getFloorById(id);
+			if (existingFloor == null) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Floor with ID " + id + " not found");
+			}
 
-	        // Update fields
-	        existingFloor.setName(floorDetails.getName());
-	        existingFloor.setDescription(floorDetails.getDescription());
-	       
-	        
-	        existingFloor.setDescription(floorDetails.getDescription()); // if you have more fields
-	        // You can add more setters here for other updatable fields
+			// Update fields
+			existingFloor.setName(floorDetails.getName());
+			existingFloor.setDescription(floorDetails.getDescription());
 
-	        // Save updated floor
-	        Floor updatedFloor = service.updateFloor(existingFloor.getId(),existingFloor);
+			existingFloor.setDescription(floorDetails.getDescription()); // if you have more fields
+			// You can add more setters here for other updatable fields
 
-	        return ResponseEntity.ok(updatedFloor);
+			// Save updated floor
+			Floor updatedFloor = service.updateFloor(existingFloor.getId(), existingFloor);
 
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return ResponseEntity
-	                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                .body("An error occurred while updating the floor");
-	    }
+			return ResponseEntity.ok(updatedFloor);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("An error occurred while updating the floor");
+		}
 	}
-	
-	
-	
+
 //	@DeleteMapping("/admin/deletefloor/{id}")
 	@DeleteMapping("/auth/deletefloor/{id}")
-	public ResponseEntity<String> deleteFloor(@PathVariable("id") int id){
+	public ResponseEntity<String> deleteFloor(@PathVariable("id") int id) {
 		boolean isDeleted = service.deleteFloor(id);
-		if(isDeleted){
+		if (isDeleted) {
 			String responseContent = "Floor has been deleted successfully";
-			return new ResponseEntity<String>(responseContent,HttpStatus.OK);
+			return new ResponseEntity<String>(responseContent, HttpStatus.OK);
 		}
 		String error = "Error while deleting Floor from database";
-		return new ResponseEntity<String>(error,HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<String>(error, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 }
