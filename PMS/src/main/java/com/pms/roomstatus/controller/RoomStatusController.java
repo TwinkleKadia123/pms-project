@@ -114,6 +114,8 @@ public class RoomStatusController {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("RoomStatus with ID " + id + " not found");
 			}
 
+			
+			
 			// Update fields
 			existingRoomStatus.setRoomStatusColor(roomStatusDetails.getRoomStatusColor());
 			existingRoomStatus.setRoomStatusName(roomStatusDetails.getRoomStatusName());
