@@ -3245,3 +3245,7 @@ Identify and stop the process that's listening on port 9091 or configure this ap
 2026-03-19 12:14:09 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 9090 (http) with context path ''
 2026-03-19 12:14:09 [restartedMain] INFO  com.pms.Application - Started Application in 0.484 seconds (process running for 1114.581)
 2026-03-19 12:14:09 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2026-03-19 13:09:55 [RMI TCP Connection(78)-127.0.0.1] INFO  o.s.b.a.SpringApplicationAdminMXBeanRegistrar$SpringApplicationAdmin - Application shutdown requested.
+2026-03-19 13:09:55 [RMI TCP Connection(78)-127.0.0.1] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-03-19 13:09:55 [RMI TCP Connection(78)-127.0.0.1] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-23 - Shutdown initiated...
+2026-03-19 13:09:55 [RMI TCP Connection(78)-127.0.0.1] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-23 - Shutdown completed.
