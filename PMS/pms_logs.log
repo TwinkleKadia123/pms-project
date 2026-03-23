@@ -14312,3 +14312,7 @@ Unconditional classes:
         PMS_db.password_reset_token 
     where
         id=?
+2026-03-23 18:34:15 [RMI TCP Connection(97)-127.0.0.1] INFO  o.s.b.a.SpringApplicationAdminMXBeanRegistrar$SpringApplicationAdmin - Application shutdown requested.
+2026-03-23 18:34:15 [RMI TCP Connection(97)-127.0.0.1] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-03-23 18:34:15 [RMI TCP Connection(97)-127.0.0.1] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-13 - Shutdown initiated...
+2026-03-23 18:34:15 [RMI TCP Connection(97)-127.0.0.1] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-13 - Shutdown completed.
