@@ -20,8 +20,13 @@ public class JwtUtil {
 	
 	static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
 	
+	private String secret = "${jwt.secret}";
+	
     private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     private final long expirationMs = 3600000; // 1 hour
+    
+//    private final long expirationMs =  Long.parseLong("${jwt.expiration}");
+    
     
     public String generateToken(String username) {
         return Jwts.builder()
@@ -39,6 +44,17 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
+    }
+    
+    public String extractUsername(String token) {
+        return getClaims(token).getSubject();
+    }
+
+    private Claims getClaims(String token) {
+        return Jwts.parser()
+                .setSigningKey(secret)
+                .parseClaimsJws(token)
+                .getBody();
     }
 }
 

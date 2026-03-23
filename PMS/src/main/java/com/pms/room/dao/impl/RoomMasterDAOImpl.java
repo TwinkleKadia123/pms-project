@@ -136,6 +136,4 @@ static final Logger logger = LoggerFactory.getLogger(RoomMasterDAOImpl.class);
 		return entityManager.find(RoomMaster.class, id);
 	}
 
-
-
 }

@@ -19,7 +19,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -76,6 +75,15 @@ static final Logger logger = LoggerFactory.getLogger(Floor.class);
 	
 	private String roomTypeName;
 	
+	 private String roomStatus; // AVAILABLE / BOOKED
+	 
+		public String getRoomStatus() {
+		return roomStatus;
+	}
+
+	 public void setRoomStatus(String roomStatus) {
+		 this.roomStatus = roomStatus;
+	 }
 		@ManyToOne
 	    @JoinColumn(name = "room_type_id", insertable = false, updatable = false)
 	    private RoomType roomType;

@@ -3,7 +3,6 @@ package com.pms.floor.dao;
 import java.util.List;
 
 import com.pms.floor.entity.Book;
-import com.pms.floor.entity.Floor;
 
 public interface IBookStoreDAO {
 	
