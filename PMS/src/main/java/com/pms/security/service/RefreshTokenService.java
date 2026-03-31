@@ -26,11 +26,12 @@ public class RefreshTokenService {
 
     public RefreshToken createToken(User user) {
         RefreshToken token = new RefreshToken();
-
+        
+        
         token.setUser(user);
         token.setToken(UUID.randomUUID().toString());
         token.setExpiryDate(Instant.now().plus(7, ChronoUnit.DAYS));
-
+        
         return repository.save(token);
     }
 

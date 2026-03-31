@@ -9,6 +9,7 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.UUID;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -22,7 +23,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import com.pms.imageupload.*;
+
+import com.pms.imageupload.IFileStorageService;
+import com.pms.util.ConstantUtils;
 
 @RestController
 
@@ -35,22 +38,22 @@ public class ImageController {
     }
 
     // Upload image
-//    @PostMapping("/user/upload")
-    @PostMapping("/auth/upload")
+    @PostMapping("/user/upload")
+//    @PostMapping("/auth/upload")
     public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
         try {
-            String fileName = fileStorageService.storeFile(file);
-//            String fileUrl = "/api/images/" + fileName;
-            String fileUrl="${file.upload-dir}" +fileName;
-            return ResponseEntity.ok("Image uploaded successfully: " + fileUrl);
+        	String fileName = fileStorageService.storeFile(file);
+           
+            
+            return ResponseEntity.ok("Image uploaded successfully: " + fileName);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Upload failed: " + e.getMessage());
         }
     }
 
     // Serve image
-//    @GetMapping("/user/{fileName:.+}")
-    @GetMapping("/auth/{fileName:.+}")
+    @GetMapping("/user/{fileName:.+}")
+//    @GetMapping("/auth/{fileName:.+}")
     public ResponseEntity<Resource> getImage(@PathVariable String fileName) {
         try {
             Path filePath = fileStorageService.loadFile(fileName);
@@ -73,7 +76,7 @@ public class ImageController {
      * DELETE endpoint to remove an image by filename
      * Example: DELETE /api/images/delete/sample.jpg
      */
-    @DeleteMapping("/auth/delete/{filename:.+}")
+    @DeleteMapping("/user/delete/{filename:.+}")
     public ResponseEntity<String> deleteImage(@PathVariable String filename) {
         try {
             // Prevent directory traversal attacks
@@ -82,9 +85,7 @@ public class ImageController {
                         .body("Invalid filename.");
             }
 
-//            String fileUrl = "/uploads/pms" ;
-            
-            String fileUrl="${file.upload-dir}";
+            String fileUrl = ConstantUtils.IMAGE_UPLOAD_PATH ;
             
             Path filePath = Paths.get(fileUrl).resolve(filename).normalize();
             File file = filePath.toFile();

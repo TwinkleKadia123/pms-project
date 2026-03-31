@@ -87,19 +87,3 @@ public class FloorDAOImpl implements IFloorDAO {
 		    }
 	
 	}
-
-
-//	@Override
-//	public Book CreateBook(Book book) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//
-//	@Override
-//	public Book book(int BookId, Book book) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//	
-

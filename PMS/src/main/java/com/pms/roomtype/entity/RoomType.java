@@ -48,6 +48,9 @@ static final Logger logger = LoggerFactory.getLogger(RoomType.class);
 	@Column(name="room_type_name")
 	private String roomTypeName;
 	
+	@Column(name="price")
+	private Double price;
+	
 	@Column(name="created_on", nullable = false, updatable = false)
 	@CreationTimestamp // Automatically sets value when entity is persisted
 	private Date createdOn;
@@ -83,6 +86,13 @@ static final Logger logger = LoggerFactory.getLogger(RoomType.class);
 	public void setCreatedOn(Date createdOn) {
 		this.createdOn = createdOn;
 	}
+	public Double getPrice() {
+		return price;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
+	}
 
 	@Override
 	public String toString() {
@@ -93,14 +103,12 @@ static final Logger logger = LoggerFactory.getLogger(RoomType.class);
 		builder.append(shortName);
 		builder.append(", roomTypeName=");
 		builder.append(roomTypeName);
+		builder.append(", price=");
+		builder.append(price);
 		builder.append(", createdOn=");
 		builder.append(createdOn);
 		builder.append("]");
 		return builder.toString();
 	}
-	
-	
-	
-	
 
 }

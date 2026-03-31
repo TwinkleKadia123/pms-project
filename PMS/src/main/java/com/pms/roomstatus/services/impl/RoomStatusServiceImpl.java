@@ -8,12 +8,14 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.pms.roomstatus.dao.IRoomStatusDAO;
+import com.pms.roomstatus.dao.RoomStatusRepository;
 import com.pms.roomstatus.entity.RoomStatus;
 import com.pms.roomstatus.services.IRoomStatusService;
-import com.pms.roomtype.entity.RoomType;
+import com.pms.search.specification.RoomStatusSpecification;
 
 /**
  * 
@@ -25,6 +27,15 @@ static final Logger logger = LoggerFactory.getLogger(RoomStatusServiceImpl.class
 	
 	@Autowired
 	private IRoomStatusDAO dao;
+	
+	@Autowired
+	private RoomStatusRepository roomStatusRepository;
+	
+	public RoomStatusServiceImpl(IRoomStatusDAO dao, RoomStatusRepository roomStatusRepository) {
+		super();
+		this.dao = dao;
+		this.roomStatusRepository = roomStatusRepository;
+	}
 
 	public List<RoomStatus> getRoomStatuses() {
 		return dao.getRoomStatuses();
@@ -51,9 +62,14 @@ static final Logger logger = LoggerFactory.getLogger(RoomStatusServiceImpl.class
 	public RoomStatus getRoomStatusById(Integer id) {
 		return dao.findById(id);
 	}
-	
-	
 
-	
+	@Override
+	public List<RoomStatus> search(String roomStatusName, String roomStatusDescription) {
+		Specification<RoomStatus> spec = Specification
+                .where(RoomStatusSpecification.hasName(roomStatusName))
+                .and(RoomStatusSpecification.hasDescription(roomStatusDescription));
 
+        return roomStatusRepository.findAll(spec);
+	}
+	
 }

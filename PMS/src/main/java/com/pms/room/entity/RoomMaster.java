@@ -9,7 +9,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.pms.building.entity.Building;
 import com.pms.floor.entity.Floor;
+import com.pms.roomstatus.entity.RoomStatus;
 import com.pms.roomtype.entity.RoomType;
 
 import jakarta.persistence.Column;
@@ -38,7 +40,7 @@ import lombok.Setter;
 @Table(name="room_master")
 public class RoomMaster {
 	
-static final Logger logger = LoggerFactory.getLogger(Floor.class);
+static final Logger logger = LoggerFactory.getLogger(RoomMaster.class);
 	
 	private static final long serialVersionUID = 1L;
 	@Id
@@ -57,6 +59,9 @@ static final Logger logger = LoggerFactory.getLogger(Floor.class);
 	
 	@Column(name="floor_id")
 	private Integer floorId;
+	
+	@Column(name="building_id")
+	private Integer buildingId;
 
 	@Column(name="smoking")
 	private boolean smoking;
@@ -71,24 +76,53 @@ static final Logger logger = LoggerFactory.getLogger(Floor.class);
 	@CreationTimestamp // Automatically sets value when entity is persisted
 	private Date createdOn;
 	
-	private String name;
+	private String floorName;
 	
 	private String roomTypeName;
 	
-	 private String roomStatus; // AVAILABLE / BOOKED
-	 
-		public String getRoomStatus() {
-		return roomStatus;
+	private String buildingName;
+	
+	private Integer roomStatusId;
+	
+	private String roomStatus;
+	
+	public String getBuildingName() {
+		return buildingName;
 	}
 
-	 public void setRoomStatus(String roomStatus) {
-		 this.roomStatus = roomStatus;
-	 }
+	public void setBuildingName(String buildingName) {
+		this.buildingName = buildingName;
+	}
+
+	
+	
+	public Integer getRoomStatusId() {
+		return roomStatusId;
+	}
+
+	public void setRoomStatusId(Integer roomStatusId) {
+		this.roomStatusId = roomStatusId;
+	}
+
+	@ManyToOne
+    @JoinColumn(name = "room_status_table_id", insertable = false, updatable = false)
+    private RoomStatus roomStatusTable;
+
 		@ManyToOne
 	    @JoinColumn(name = "room_type_id", insertable = false, updatable = false)
 	    private RoomType roomType;
+		
+		
+		
+	    public Building getBuilding() {
+			return building;
+		}
 
-	    // Getter for room type name
+		public void setBuilding(Building building) {
+			this.building = building;
+		}
+
+		// Getter for room type name
 	    public String getRoomTypeName() {
 	        return roomType != null ? roomType.getRoomTypeName(): null;
 	    }
@@ -101,14 +135,18 @@ static final Logger logger = LoggerFactory.getLogger(Floor.class);
 	    @ManyToOne
 	    @JoinColumn(name = "floor_id", insertable = false, updatable = false)
 	    private Floor floor;
+	    
+	    @ManyToOne
+	    @JoinColumn(name = "building_id", insertable = false, updatable = false)
+	    private Building building;
 
 	    // Getter for room type name
 	    public String getName() {
 	        return floor != null ? floor.getName(): null;
 	    }
 	    
-	    public String setName(String name) {
-	    	return this.name=name;
+	    public String setFloorName(String floorName) {
+	    	return this.floorName=floorName;
 	    }
 	    
 		public RoomType getRoomType() {
@@ -204,5 +242,31 @@ static final Logger logger = LoggerFactory.getLogger(Floor.class);
 		public void setCreatedOn(Date createdOn) {
 			this.createdOn = createdOn;
 		}
+
+		public Integer getBuildingId() {
+			return buildingId;
+		}
+
+		public void setBuildingId(Integer buildingId) {
+			this.buildingId = buildingId;
+		}
+
+		public String getRoomStatus() {
+			return roomStatus;
+		}
+
+		public void setRoomStatus(String roomStatus) {
+			this.roomStatus = roomStatus;
+		}
+
+		public RoomStatus getRoomStatusTable() {
+			return roomStatusTable;
+		}
+
+		public void setRoomStatusTable(RoomStatus roomStatusTable) {
+			this.roomStatusTable = roomStatusTable;
+		}
+		
 	
+		
 }

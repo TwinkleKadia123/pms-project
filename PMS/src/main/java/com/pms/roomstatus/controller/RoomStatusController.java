@@ -10,21 +10,23 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.pms.floor.entity.Floor;
 import com.pms.roomstatus.entity.RoomStatus;
 import com.pms.roomstatus.services.IRoomStatusService;
 
 /**
  * 
  */
-@Controller
+@RestController
 public class RoomStatusController {
 
 	private static final Logger logger = LoggerFactory.getLogger(RoomStatusController.class);
@@ -32,8 +34,8 @@ public class RoomStatusController {
 	@Autowired
 	private IRoomStatusService service;
 
-//	@GetMapping("/admin/getRoomTypes")
-	@GetMapping("/auth/getroomstatuses")
+	@GetMapping("/user/getroomstatuses")
+//	@GetMapping("/auth/getroomstatuses")
 	public ResponseEntity<List<RoomStatus>> getRoomStatus() {
 
 		List<RoomStatus> roomStatuses = service.getRoomStatuses();
@@ -41,15 +43,15 @@ public class RoomStatusController {
 
 	}
 
-//	@GetMapping("/admin/getRoomType/{id}")
-	@GetMapping("/auth/getroomstatus/{id}")
+	@GetMapping("/user/getroomstatus/{id}")
+//	@GetMapping("/auth/getroomstatus/{id}")
 	public ResponseEntity<RoomStatus> getRoomStatus(@PathVariable("id") Integer id) {
 		RoomStatus roomStatus = service.getRoomStatus(id);
 		return new ResponseEntity<RoomStatus>(roomStatus, HttpStatus.OK);
 	}
 
-//	@PostMapping("/admin/createRoomType")
-	@PostMapping("/auth/createroomstatus")
+	@PostMapping("/admin/createroomstatus")
+//	@PostMapping("/auth/createroomstatus")
 	public ResponseEntity<?> createRoomType(@RequestBody RoomStatus roomStatus) {
 		// Validate input
 		if (roomStatus == null || roomStatus.getRoomStatusName() == null
@@ -83,8 +85,8 @@ public class RoomStatusController {
 		}
 	}
 
-//@PutMapping("/admin/updateroomtype/{id}")
-	@PutMapping("/auth/updateroomstatus/{id}")
+@PutMapping("/admin/updateroomstatus/{id}")
+//	@PutMapping("/auth/updateroomstatus/{id}")
 	public ResponseEntity<?> updateRoomType(@PathVariable Integer id, @RequestBody RoomStatus roomStatusDetails) {
 		// Validate input
 		if (roomStatusDetails == null || roomStatusDetails.getRoomStatusName() == null
@@ -135,8 +137,8 @@ public class RoomStatusController {
 		}
 	}
 
-//	@DeleteMapping("/admin/deleteRoomType/{id}")
-	@DeleteMapping("/auth/deleteroomstatus/{id}")
+	@DeleteMapping("/admin/deleteroomstatus/{id}")
+//	@DeleteMapping("/auth/deleteroomstatus/{id}")
 	public ResponseEntity<String> deleteRoomStatus(@PathVariable("id") int id) {
 		boolean isDeleted = service.deleteRoomStatus(id);
 		if (isDeleted) {
@@ -146,5 +148,13 @@ public class RoomStatusController {
 		String error = "Error while deleting RoomStatus from database";
 		return new ResponseEntity<String>(error, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+	
+	@GetMapping("/user/roomstatus/search")
+    public List<RoomStatus> searchRoomStatus(
+            @RequestParam(required = false) String roomStatusName,
+            @RequestParam(required = false) String roomStatusDescription) {
+
+        return service.search(roomStatusName,roomStatusDescription);
+    }
 
 }

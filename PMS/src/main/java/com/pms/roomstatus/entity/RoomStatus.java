@@ -32,7 +32,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name="rooms_tatus")
+@Table(name="room_status")
 public class RoomStatus implements Serializable {
 	
 	static final Logger logger = LoggerFactory.getLogger(RoomStatus.class);

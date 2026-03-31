@@ -17,14 +17,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.pms.roomstatus.entity.RoomStatus;
 import com.pms.roomtype.entity.RoomType;
 import com.pms.roomtype.services.IRoomTypeService;
 
 /**
  * 
  */
-@Controller
+@RestController
 public class RoomTypeController {
 
 	private static final Logger logger = LoggerFactory.getLogger(RoomTypeController.class);
@@ -32,8 +35,8 @@ public class RoomTypeController {
 	@Autowired
 	private IRoomTypeService service;
 
-//	@GetMapping("/admin/getRoomTypes")
-	@GetMapping("/auth/getroomtypes")
+	@GetMapping("/user/getroomtypes")
+//	@GetMapping("/auth/getroomtypes")
 	public ResponseEntity<List<RoomType>> getRoomTypes() {
 
 		List<RoomType> roomTypes = service.getRoomTypes();
@@ -41,15 +44,15 @@ public class RoomTypeController {
 
 	}
 
-//	@GetMapping("/admin/getRoomType/{id}")
-	@GetMapping("/auth/getroomtype/{id}")
+	@GetMapping("/user/getroomtype/{id}")
+//	@GetMapping("/auth/getroomtype/{id}")
 	public ResponseEntity<RoomType> getRoomType(@PathVariable("id") Integer id) {
 		RoomType roomType = service.getRoomType(id);
 		return new ResponseEntity<RoomType>(roomType, HttpStatus.OK);
 	}
 
-//	@PostMapping("/admin/createRoomType")
-	@PostMapping("/auth/createroomtype")
+	@PostMapping("/admin/createroomtype")
+//	@PostMapping("/auth/createroomtype")
 	public ResponseEntity<?> createRoomType(@RequestBody RoomType roomType) {
 		// Validate input
 		if (roomType == null || roomType.getShortName() == null || roomType.getShortName().trim().isEmpty()) {
@@ -58,6 +61,10 @@ public class RoomTypeController {
 
 		if (roomType == null || roomType.getRoomTypeName() == null || roomType.getRoomTypeName().trim().isEmpty()) {
 			return ResponseEntity.badRequest().body("RoomType roomtyname must not be null or empty");
+		}
+		
+		if (roomType == null || roomType.getPrice() == null || roomType.getPrice()==0L) {
+			return ResponseEntity.badRequest().body("RoomType price must not be null or empty");
 		}
 
 		try {
@@ -71,8 +78,8 @@ public class RoomTypeController {
 		}
 	}
 
-//@PutMapping("/admin/updateroomtype/{id}")
-	@PutMapping("/auth/updateroomtype/{id}")
+@PutMapping("/admin/updateroomtype/{id}")
+//	@PutMapping("/auth/updateroomtype/{id}")
 	public ResponseEntity<?> updateRoomType(@PathVariable Integer id, @RequestBody RoomType roomTypeDetails) {
 		// Validate input
 		if (roomTypeDetails == null || roomTypeDetails.getShortName() == null
@@ -83,6 +90,10 @@ public class RoomTypeController {
 		if (roomTypeDetails == null || roomTypeDetails.getRoomTypeName() == null
 				|| roomTypeDetails.getRoomTypeName().trim().isEmpty()) {
 			return ResponseEntity.badRequest().body("RoomType roomtypename must not be null or empty");
+		}
+		
+		if (roomTypeDetails == null || roomTypeDetails.getPrice() == null || roomTypeDetails.getPrice()==0L) {
+			return ResponseEntity.badRequest().body("RoomType price must not be null or empty");
 		}
 
 		try {
@@ -95,6 +106,7 @@ public class RoomTypeController {
 			// Update fields
 			existingRoomType.setShortName(roomTypeDetails.getShortName());
 			existingRoomType.setRoomTypeName(roomTypeDetails.getRoomTypeName());
+			existingRoomType.setPrice(roomTypeDetails.getPrice());
 			// You can add more setters here for other updatable fields
 
 			// Save updated RoomType
@@ -109,8 +121,8 @@ public class RoomTypeController {
 		}
 	}
 
-//	@DeleteMapping("/admin/deleteRoomType/{id}")
-	@DeleteMapping("/auth/deleteroomtype/{id}")
+	@DeleteMapping("/admin/deleteroomtype/{id}")
+//	@DeleteMapping("/auth/deleteroomtype/{id}")
 	public ResponseEntity<String> deleteRoomType(@PathVariable("id") int id) {
 		boolean isDeleted = service.deleteRoomType(id);
 		if (isDeleted) {
@@ -120,5 +132,15 @@ public class RoomTypeController {
 		String error = "Error while deleting RoomType from database";
 		return new ResponseEntity<String>(error, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+	
+	@GetMapping("/user/roomtype/search")
+    public List<RoomType> searchRoomType(
+            @RequestParam(required = false) String shortName,
+            @RequestParam(required = false) String roomTypeName,
+            @RequestParam(required = false) Double price
+            ) {
+
+        return service.search(shortName,roomTypeName,price);
+    }
 
 }

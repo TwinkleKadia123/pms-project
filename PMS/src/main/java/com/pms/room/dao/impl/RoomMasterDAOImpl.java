@@ -3,11 +3,11 @@
  */
 package com.pms.room.dao.impl;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +15,7 @@ import com.pms.floor.dao.IFloorDAO;
 import com.pms.floor.entity.Floor;
 import com.pms.room.dao.IRoomMasterDAO;
 import com.pms.room.entity.RoomMaster;
+import com.pms.roomstatus.dao.IRoomStatusDAO;
 import com.pms.roomstatus.entity.RoomStatus;
 import com.pms.roomtype.dao.IRoomTypeDAO;
 import com.pms.roomtype.entity.RoomType;
@@ -44,16 +45,33 @@ static final Logger logger = LoggerFactory.getLogger(RoomMasterDAOImpl.class);
 	@Autowired
 	private IRoomTypeDAO roomTypeDAO;
 	
+	@Autowired
+	private RoomMasterRepository roomMasterRepository;
+	
+	@Autowired
+	private IRoomStatusDAO roomStatusDAO;
+	
+	
 
+//	@SuppressWarnings("unchecked")
+//	public List<RoomMaster> getRoomMasters() {
+//		String hql = "FROM RoomMaster as atcl ORDER BY atcl.id";
+//		return (List<RoomMaster>) entityManager.createQuery(hql).getResultList();
+//	}
+	
 	@SuppressWarnings("unchecked")
-	public List<RoomMaster> getRoomMasters() {
+	public Page<RoomMaster> getRoomMasters(Pageable pageable) {
 		String hql = "FROM RoomMaster as atcl ORDER BY atcl.id";
-		return (List<RoomMaster>) entityManager.createQuery(hql).getResultList();
+		return  roomMasterRepository.findAll(pageable);
 	}
 	
 
 	public RoomMaster getRoomMaster(int roomMasterId) {
-		return entityManager.find(RoomMaster.class, roomMasterId);
+		
+		RoomMaster rMaster= entityManager.find(RoomMaster.class, roomMasterId);
+		RoomStatus rStatus = roomStatusDAO.getRoomStatus(rMaster.getRoomStatusId());
+		rMaster.setRoomStatusTable(rStatus);
+		return rMaster;
 	}
 
 	public RoomMaster createRoomMaster(RoomMaster roomMaster) {
@@ -69,7 +87,9 @@ static final Logger logger = LoggerFactory.getLogger(RoomMasterDAOImpl.class);
 		roomMasterDB.setRoomName(roomMaster.getRoomName());
 		roomMasterDB.setRoomShortName(roomMaster.getRoomShortName());
 		
-		roomMasterDB.setRoomTypeId(roomMaster.getRoomTypeId());
+//		roomMasterDB.setRoomTypeId(roomMaster.getRoomTypeId());
+//		todo:remove comment
+//		roomMasterDB.setRoomStatusTableId(roomMaster.getRoomStatusTableId());
 		roomMasterDB.setFloorId(roomMaster.getFloorId());
 //		roomMasterDB.setRoomType(roomMaster.getRoomType());
 //		roomMasterDB.setFloor(roomMaster.getFloor());
@@ -109,11 +129,13 @@ static final Logger logger = LoggerFactory.getLogger(RoomMasterDAOImpl.class);
 		
 		Floor floor =floorDao.getFloor(roomMaster.getFloorId());
 		roomMaster.setFloor(floor);
-		roomMaster.setName(floor.getName());
+		roomMaster.setFloorName(floor.getName());
 		
 		RoomType roomType= roomTypeDAO.getRoomType(roomMaster.getRoomTypeId());
+		RoomStatus roomStatus = roomStatusDAO.getRoomStatus(roomMaster.getRoomStatusId());
 		roomMaster.setRoomTypeName(roomType.getRoomTypeName());		
 		roomMaster.setRoomType(roomType);
+		roomMaster.setRoomStatusTable(roomStatus);
 		
 		return roomMaster;
 	}

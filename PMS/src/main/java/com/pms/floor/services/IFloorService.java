@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.pms.floor.entity.Floor;
+import com.pms.personaldetails.PersonalDetails;
 
 public interface IFloorService  {
 	
@@ -17,5 +18,6 @@ public interface IFloorService  {
 	Floor getFloor(int floorId);
 	boolean deleteFloor(int floorId);
 	Floor getFloorById(Integer id);
+	public List<Floor> search(String name,String description);
 
 }

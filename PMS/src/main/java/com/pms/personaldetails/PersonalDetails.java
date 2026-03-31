@@ -3,6 +3,11 @@
  */
 package com.pms.personaldetails;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.pms.floor.entity.Floor;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,26 +19,37 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * 
  */
-
 @Entity
-@Table(name = "personal_details", schema = "pms_db")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
+@Table(name="personal_details")
 public class PersonalDetails {
+	
+static final Logger logger = LoggerFactory.getLogger(PersonalDetails.class);
+	
+	private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "name is required")
+    @NotBlank(message = "firstname is required")
     @Column(nullable = false)
-    private String personalDetailName;
+    private String firstName;
+    
+    @NotBlank(message = "lastname is required")
+    @Column(nullable = false)
+    private String lastName;
     
     @NotBlank(message = "company name is required")
     @Column(nullable = false)
@@ -47,25 +63,39 @@ public class PersonalDetails {
     private String email;
     
     private String address;
+
+    @Column(unique = true, nullable = true)
+    private String profilePhoto;
     
+    @Column(unique = true, nullable = true)
+    private String signature;
     
 	public Long getId() {
 		return id;
 	}
-
 
 	public void setId(Long id) {
 		this.id = id;
 	}
 
 
-	public String getPersonalDetailName() {
-		return personalDetailName;
+	public String getFirstName() {
+		return firstName;
 	}
 
 
-	public void setPersonalDetailName(String personalDetailName) {
-		this.personalDetailName = personalDetailName;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+
+	public String getLastName() {
+		return lastName;
+	}
+
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 
@@ -108,4 +138,20 @@ public class PersonalDetails {
 		this.companyName = companyName;
 	}
 
+	public String getProfilePhoto() {
+		return profilePhoto;
+	}
+
+	public void setProfilePhoto(String profilePhoto) {
+		this.profilePhoto = profilePhoto;
+	}
+
+	public String getSignature() {
+		return signature;
+	}
+
+	public void setSignature(String signature) {
+		this.signature = signature;
+	}
+	
 }

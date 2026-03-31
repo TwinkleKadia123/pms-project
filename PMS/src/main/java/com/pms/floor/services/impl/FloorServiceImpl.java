@@ -1,16 +1,18 @@
 package com.pms.floor.services.impl;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.pms.floor.dao.FloorsRepository;
 import com.pms.floor.dao.IFloorDAO;
 import com.pms.floor.entity.Floor;
 import com.pms.floor.services.IFloorService;
+import com.pms.search.specification.FloorSpecification;
 
 @Service
 public class FloorServiceImpl implements IFloorService {
@@ -19,25 +21,38 @@ public class FloorServiceImpl implements IFloorService {
 	
 	@Autowired
 	private IFloorDAO dao;
+	
+	@Autowired
+	private FloorsRepository floorsRepository;
+	
+	
+
+	public FloorServiceImpl(IFloorDAO dao, FloorsRepository floorsRepository) {
+		super();
+		this.dao = dao;
+		this.floorsRepository = floorsRepository;
+	}
 
 	public List<Floor> getFloors() {
-		return dao.getFloors();
+//		return dao.getFloors();
+		return floorsRepository.findAll();
 	}
 
-	public Floor createFloor(Floor Floor) {
-		return dao.createFloor(Floor);
+	public Floor createFloor(Floor floor) {
+//		return dao.createFloor(Floor);
+		 return floorsRepository.saveAndFlush(floor);
 	}
 
-	public Floor updateFloor(int FloorId, Floor Floor) {
-		return dao.updateFloor(FloorId, Floor);
+	public Floor updateFloor(int floorId, Floor floor) {
+		return dao.updateFloor(floorId, floor);
 	}
 
-	public Floor getFloor(int FloorId) {
-		return dao.getFloor(FloorId);
+	public Floor getFloor(int floorId) {
+		return dao.getFloor(floorId);
 	}
 
-	public boolean deleteFloor(int FloorId) {
-		return dao.deleteFloor(FloorId);
+	public boolean deleteFloor(int floorId) {
+		return dao.deleteFloor(floorId);
 	}
 	
 	
@@ -45,31 +60,13 @@ public class FloorServiceImpl implements IFloorService {
 	        return dao.findById(id);
 	    }
 
+	 @Override
+	 public List<Floor> search(String name, String description) {
+	        Specification<Floor> spec = Specification
+	                .where(FloorSpecification.hasName(name))
+	                .and(FloorSpecification.hasDescription(description));
 
-	
-/*	@Override
-	public List<Floor> public getFloors() {
-		return dao.getFloors();
-	}
-
-	@Override
-	public Floor createFloor(Floor Floor) {
-		return dao.createFloor(Floor);
-	}
-
-	@Override
-	public Floor updateFloor(int FloorId, Floor Floor) {
-		return dao.updateFloor(FloorId, Floor);
-	}
-
-	@Override
-	public Floor getFloor(int FloorId) {
-		return dao.getFloor(FloorId);
-	}
-
-	@Override
-	public boolean deleteFloor(int FloorId) {
-		return dao.deleteFloor(FloorId);
-	}
-*/
+	        return floorsRepository.findAll(spec);
+	    }
+	 
 }

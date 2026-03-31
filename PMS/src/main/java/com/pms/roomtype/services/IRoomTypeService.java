@@ -21,5 +21,7 @@ public interface IRoomTypeService {
 	RoomType getRoomType(int roomTypeId);
 	boolean deleteRoomType(int RoomTypeId);
 	RoomType getRoomTypeById(Integer id);
+	List<RoomType> search(String shortName, String roomTypeName,Double price);
+	
 
 }

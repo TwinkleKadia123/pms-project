@@ -19,6 +19,6 @@ public interface IRoomStatusService {
 	RoomStatus getRoomStatus(int roomTypeId);
 	boolean deleteRoomStatus(int RoomTypeId);
 	RoomStatus getRoomStatusById(Integer id);
-
+	public List<RoomStatus> search(String roomStatusName,String roomStatusDescription);
 
 }

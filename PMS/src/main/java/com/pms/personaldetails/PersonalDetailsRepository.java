@@ -1,9 +1,8 @@
 package com.pms.personaldetails;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-import com.pms.booking.service.IBookingService;
-
-public interface PersonalDetailsRepository extends JpaRepository<PersonalDetails, Long> {
+public interface PersonalDetailsRepository extends JpaRepository<PersonalDetails, Long>, JpaSpecificationExecutor<PersonalDetails> {
 
 }

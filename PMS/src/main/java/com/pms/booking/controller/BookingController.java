@@ -31,7 +31,7 @@ public class BookingController {
 	        return service.createBooking(req);
 	    }
 
-	    @GetMapping("/auth/getbookings")
+	    @GetMapping("/admin/getbookings")
 	    public List<Booking> getAll() {
 	        return service.getAllBookings();
 	    }

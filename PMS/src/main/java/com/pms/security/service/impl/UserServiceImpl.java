@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.pms.security.dto.RegisterRequest;
 import com.pms.security.entity.Role;
 import com.pms.security.entity.User;
+import com.pms.security.repository.RoleRepository;
 import com.pms.security.repository.UserRepository;
 import com.pms.security.service.IUserService;
 
@@ -22,11 +23,13 @@ import com.pms.security.service.IUserService;
 public class UserServiceImpl implements IUserService {
 	
 	  private final UserRepository userRepository ;
+	  private final RoleRepository roleRepository;
 	    private final PasswordEncoder passwordEncoder;
 	
-	 public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+	 public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,RoleRepository roleRepository) {
 	        this.userRepository = userRepository;
 	        this.passwordEncoder = passwordEncoder;
+	        this.roleRepository = roleRepository;
 	    }
 
 	    public User registerNewUser(RegisterRequest request) {
@@ -39,14 +42,13 @@ public class UserServiceImpl implements IUserService {
 	        User user = new User();
 	        user.setUsername(request.getUsername());
 	        user.setPassword(passwordEncoder.encode(request.getPassword()));
-	        Set<Role> setRole= new HashSet<Role>();
-	        Role r= new Role();
-	        r.setName(request.getRole());
-	        setRole.add(r);
-	        user.setRoles(setRole);
 	        user.setEnabled(true);
-	        //user.setRoles(request.getRole() != null ? request.getRole() : "ROLE_USER");
-
+	        Set<Role> roles = new HashSet<>();
+	        String roleName=request.getRole();
+	            Role role = roleRepository.findByName(roleName)
+	                .orElseThrow(() -> new RuntimeException("Role not found"));
+	            roles.add(role);
+	        user.setRoles(roles);
 	        return userRepository.save(user);
 	    }
 }

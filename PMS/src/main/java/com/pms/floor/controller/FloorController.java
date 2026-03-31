@@ -7,18 +7,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.pms.floor.entity.Floor;
 import com.pms.floor.services.IFloorService;
+import com.pms.personaldetails.PersonalDetails;
 
-@Controller
+@RestController
 public class FloorController {
 
 	private static final Logger logger = LoggerFactory.getLogger(FloorController.class);
@@ -27,27 +29,31 @@ public class FloorController {
 	private IFloorService service;
 
 //	@GetMapping("/admin/getfloors")
-	@GetMapping("/auth/getfloors")
+	@GetMapping("/user/getfloors")
 	public ResponseEntity<List<Floor>> getFloors() {
 
-		List<Floor> Floors = service.getFloors();
-		return new ResponseEntity<List<Floor>>(Floors, HttpStatus.OK);
+		List<Floor> floors = service.getFloors();
+		return new ResponseEntity<List<Floor>>(floors, HttpStatus.OK);
 
 	}
 
 //	@GetMapping("/admin/getfloor/{id}")
-	@GetMapping("/auth/getfloor/{id}")
+	@GetMapping("/user/getfloor/{id}")
 	public ResponseEntity<Floor> getFloor(@PathVariable("id") Integer id) {
-		Floor Floor = service.getFloor(id);
-		return new ResponseEntity<Floor>(Floor, HttpStatus.OK);
+		Floor floor = service.getFloor(id);
+		return new ResponseEntity<Floor>(floor, HttpStatus.OK);
 	}
 
-//	@PostMapping("/admin/createfloor")
-	@PostMapping("/auth/createfloor")
+	@PostMapping("/admin/createfloor")
+//	@PostMapping("/auth/createfloor")
 	public ResponseEntity<?> createFloor(@RequestBody Floor floor) {
 		// Validate input
 		if (floor == null || floor.getName() == null || floor.getName().trim().isEmpty()) {
 			return ResponseEntity.badRequest().body("Floor name must not be null or empty");
+		}
+		
+		if (floor == null || floor.getDescription() == null || floor.getDescription().trim().isEmpty()) {
+			return ResponseEntity.badRequest().body("floor getDescription must not be null or empty");
 		}
 
 		try {
@@ -61,20 +67,18 @@ public class FloorController {
 		}
 	}
 
-//	@PutMapping("/updatefloor/{id}")
-//	public ResponseEntity<Floor> updateFloor(@PathVariable("id") int id, @RequestBody Floor Floor){
-//		
-//		Floor b = service.updateFloor(id, Floor);
-//		return new ResponseEntity<Floor>(b, HttpStatus.OK);
-//	}
-
-//	@PutMapping("/admin/updatefloor/{id}")
-	@PutMapping("/auth/updatefloor/{id}")
+	@PutMapping("/admin/updatefloor/{id}")
+//	@PutMapping("/auth/updatefloor/{id}")
 	public ResponseEntity<?> updateFloor(@PathVariable Integer id, @RequestBody Floor floorDetails) {
 		// Validate input
 		if (floorDetails == null || floorDetails.getName() == null || floorDetails.getName().trim().isEmpty()) {
 			return ResponseEntity.badRequest().body("Floor name must not be null or empty");
 		}
+		
+		if (floorDetails == null || floorDetails.getDescription() == null || floorDetails.getDescription().trim().isEmpty()) {
+			return ResponseEntity.badRequest().body("floor getDescription must not be null or empty");
+		}
+
 
 		try {
 			// Find existing floor
@@ -85,9 +89,8 @@ public class FloorController {
 
 			// Update fields
 			existingFloor.setName(floorDetails.getName());
-			existingFloor.setDescription(floorDetails.getDescription());
-
 			existingFloor.setDescription(floorDetails.getDescription()); // if you have more fields
+			existingFloor.setNoOfRooms(floorDetails.getNoOfRooms());
 			// You can add more setters here for other updatable fields
 
 			// Save updated floor
@@ -102,8 +105,8 @@ public class FloorController {
 		}
 	}
 
-//	@DeleteMapping("/admin/deletefloor/{id}")
-	@DeleteMapping("/auth/deletefloor/{id}")
+	@DeleteMapping("/admin/deletefloor/{id}")
+//	@DeleteMapping("/user/deletefloor/{id}")
 	public ResponseEntity<String> deleteFloor(@PathVariable("id") int id) {
 		boolean isDeleted = service.deleteFloor(id);
 		if (isDeleted) {
@@ -113,5 +116,15 @@ public class FloorController {
 		String error = "Error while deleting Floor from database";
 		return new ResponseEntity<String>(error, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+	
+	
+	@GetMapping("/user/floor/search")
+    public List<Floor> searchFloor(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String description) {
+
+        return service.search(name,description);
+    }
+	
 
 }

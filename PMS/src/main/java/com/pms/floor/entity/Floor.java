@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -48,6 +48,16 @@ public class Floor implements Serializable {
 	@CreationTimestamp // Automatically sets value when entity is persisted
 	private Date createdOn;
 
+	private Integer noOfRooms;
+	
+	public Integer getNoOfRooms() {
+		return noOfRooms;
+	}
+
+	public void setNoOfRooms(Integer noOfRooms) {
+		this.noOfRooms = noOfRooms;
+	}
+
 	public int getId() {
 		return id;
 	}
@@ -87,15 +97,10 @@ public class Floor implements Serializable {
 		builder.append(description);
 		builder.append(", createdOn=");
 		builder.append(createdOn);
+		builder.append(", noOfRooms=");
+		builder.append(noOfRooms);
 		builder.append("]");
 		return builder.toString();
 	}
-	
-	
-	
-	
-	
-
-	
 
 }

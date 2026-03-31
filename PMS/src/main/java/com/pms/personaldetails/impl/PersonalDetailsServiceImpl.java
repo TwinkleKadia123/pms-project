@@ -4,13 +4,14 @@
 package com.pms.personaldetails.impl;
 
 import java.util.List;
-import java.util.Optional;
 
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.pms.personaldetails.IPersonalDetailsService;
 import com.pms.personaldetails.PersonalDetails;
 import com.pms.personaldetails.PersonalDetailsRepository;
+import com.pms.search.specification.PersonalDetailsSpecification;
 
 /**
  * 
@@ -41,7 +42,9 @@ public class PersonalDetailsServiceImpl implements IPersonalDetailsService {
 
 	    public PersonalDetails update(Long id, PersonalDetails details) {
 	        PersonalDetails existing = getById(id);
-	        existing.setPersonalDetailName(details.getPersonalDetailName());
+//	        existing.setPersonalDetailName(details.getPersonalDetailName());
+	        existing.setFirstName(details.getFirstName());
+	        existing.setLastName(details.getLastName());	        
 	        existing.setEmail(details.getEmail());
 	        existing.setPhone(details.getPhone());
 	        existing.setAddress(details.getAddress());
@@ -52,4 +55,16 @@ public class PersonalDetailsServiceImpl implements IPersonalDetailsService {
 	    	 repository.deleteById(id);
 	    	 return true;
 	    }
+	    
+	    public List<PersonalDetails> search(String firstName,String lastName, String email, String phone, String address) {
+	        Specification<PersonalDetails> spec = Specification
+	                .where(PersonalDetailsSpecification.hasFirstName(firstName))
+	                .and(PersonalDetailsSpecification.hasLastName(lastName))
+	                .and(PersonalDetailsSpecification.hasEmail(email))
+	                .and(PersonalDetailsSpecification.hasPhone(phone))
+	                .and(PersonalDetailsSpecification.hasAddress(address));
+
+	        return repository.findAll(spec);
+	    }
+	    
 }
